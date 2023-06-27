@@ -11,6 +11,7 @@
 
     onMounted(() => {
         getNewList()
+        console.log(newList)
     })
 
 </script>
