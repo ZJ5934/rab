@@ -1,34 +1,10 @@
 <script setup>
-    import { getCategoryAPI } from '@/apis/category.js'
-    import { useRoute,onBeforeRouteUpdate } from 'vue-router'
-    import { getBannerAPI } from '@/apis/home.js'
     import GoodsItem from '@/views/Home/components/GoodsItem.vue'
+    import { useBanner } from './composables/useBanner.js'
+    import { useCategory } from './composables/useCategory.js'
 
-    const bannerList = ref([])
-    const getBanner = async () => {
-        const res = await getBannerAPI({ distributionSite: '2' })
-        // console.log(res.result)
-        bannerList.value = res.result
-    }
-    onMounted(() => {
-        getBanner()
-    })
-
-    const categoryData = ref({})
-    const route = useRoute()
-    const getCategory = async (id = route.params.id) => {
-        const res = await getCategoryAPI(id)
-        categoryData.value = res.result
-    }
-
-    onMounted(() => {
-        getCategory()
-    })
-    
-    //路由参数变化，重新发送数据接口请求
-    onBeforeRouteUpdate((to) => {
-        getCategory(to.params.id)
-    })
+    const {bannerList} = useBanner()
+    const {categoryData} = useCategory()
 
 </script>
 
@@ -52,22 +28,22 @@
             <div class="sub-list">
                 <h3>全部分类</h3>
                 <ul>
-                  <li v-for="i in categoryData.children" :key="i.id">
-                    <RouterLink to="/">
-                      <img :src="i.picture" />
-                      <p>{{ i.name }}</p>
-                    </RouterLink>
-                  </li>
+                    <li v-for="i in categoryData.children" :key="i.id">
+                        <RouterLink to="/">
+                            <img :src="i.picture" />
+                            <p>{{ i.name }}</p>
+                        </RouterLink>
+                    </li>
                 </ul>
-              </div>
-              <div class="ref-goods" v-for="item in categoryData.children" :key="item.id">
+            </div>
+            <div class="ref-goods" v-for="item in categoryData.children" :key="item.id">
                 <div class="head">
-                  <h3>- {{ item.name }}-</h3>
+                    <h3>- {{ item.name }}-</h3>
                 </div>
                 <div class="body">
-                  <GoodsItem v-for="good in item.goods" :goods="good" :key="good.id" />
+                    <GoodsItem v-for="good in item.goods" :goods="good" :key="good.id" />
                 </div>
-              </div>
+            </div>
         </div>
     </div>
 </template>
@@ -151,6 +127,7 @@
             padding: 25px 0;
         }
     }
+
     .home-banner {
         width: 1240px;
         height: 500px;
