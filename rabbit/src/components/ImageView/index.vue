@@ -1,4 +1,6 @@
 <script setup>
+  import { useMouseInElement } from '@vueuse/core'
+
   // 图片列表
   const imageList = [
     "https://yanxuan-item.nosdn.127.net/d917c92e663c5ed0bb577c7ded73e4ec.png",
@@ -7,12 +9,35 @@
     "https://yanxuan-item.nosdn.127.net/f93243224dc37674dfca5874fe089c60.jpg",
     "https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg"
   ]
-
+  //  1.小图切换大图
   const activeIndex = ref(0)
 
   const enterHandler = (i) => {
     activeIndex.value = i
   }
+
+  // 2.放大镜
+  const target = ref(null)
+  const { elementX, elementY, isOutside } = useMouseInElement(target)
+
+  const left = ref(0)
+  const top = ref(0)
+  watch([elementX, elementY], () => {
+    //横向
+    if (elementX.value > 100 && elementX.value < 300) {
+      left.value = elementX.value - 100
+    }
+    //纵向
+    if (elementY.value > 100 && elementY.value < 300) {
+      top.value = elementY.value - 100
+    }
+    //处理边界
+    if (elementX.value > 300) { left.value = 200 }
+    if (elementX.value < 100) { left.value = 0 }
+
+    if (elementY.value > 300) { top.value = 200 }
+    if (elementY.value < 100) { top.value = 200 }
+  })
 </script>
 
 
@@ -24,7 +49,7 @@
     <div class="middle" ref="target">
       <img :src="imageList[activeIndex]" alt="" />
       <!-- 蒙层小滑块 -->
-      <div class="layer" :style="{ left: `0px`, top: `0px` }"></div>
+      <div class="layer" :style="{ left: `${left}px`, top: `${top}px` }"></div>
     </div>
     <!-- 小图列表 -->
     <ul class="small">
