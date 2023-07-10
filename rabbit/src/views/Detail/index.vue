@@ -22,7 +22,7 @@
     const skuChange = (sku) => {
         // console.log(sku)
         skuObj = sku
-        // console.log(skuObj)
+        console.log(skuObj)
     }
 
     const count = ref(1)
@@ -38,8 +38,9 @@
                 name:goods.value.name,
                 picture:goods.value.mainPictures[0],
                 count:count.value,
+                price:goods.value.price,
                 skuId:skuObj.skuId,
-                attrsText:skuObj.attrsText,
+                attrsText:skuObj.specsText,
                 selected:true
             })
             ElMessage.success('添加购物车成功')
