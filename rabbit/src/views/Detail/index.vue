@@ -2,7 +2,10 @@
     import { getDetail } from '@/apis/detail'
     import { useRoute } from 'vue-router'
     import DetailHot from './components/DetailHot.vue'
+    import { ElMessage } from 'element-plus'
+    import {useCartStore} from '@/stores/cart.js'
 
+    const cartStore = useCartStore()
 
     const route = useRoute()
 
@@ -14,6 +17,37 @@
     onMounted(() => {
         getGoods()
     })
+
+    let skuObj = {}
+    const skuChange = (sku) => {
+        // console.log(sku)
+        skuObj = sku
+        // console.log(skuObj)
+    }
+
+    const count = ref(1)
+    const countChange = (count) => {
+        console.log(count)
+    }
+
+    const addCart = () => {
+        if (skuObj.skuId) {
+            //选择了规格
+            cartStore.addCart({
+                id:goods.value.id,
+                name:goods.value.name,
+                picture:goods.value.mainPictures[0],
+                count:count.value,
+                skuId:skuObj.skuId,
+                attrsText:skuObj.attrsText,
+                selected:true
+            })
+            ElMessage.success('添加购物车成功')
+        } else {
+            //没有选择规格
+            ElMessage.warning('请选择规格')
+        }
+    }
 
 </script>
 
@@ -38,7 +72,7 @@
                     <div class="goods-info">
                         <div class="media">
                             <!-- 图片预览区 -->
-                            <XtxImageView :imageList="goods.mainPictures"/>
+                            <XtxImageView :imageList="goods.mainPictures" />
                             <!-- 统计数量 -->
                             <ul class="goods-sales">
                                 <li>
@@ -87,12 +121,12 @@
                                 </dl>
                             </div>
                             <!-- sku组件 -->
-                            <XtxSku :goods="goods" @change="skuChange"/>
+                            <XtxSku :goods="goods" @change="skuChange" />
                             <!-- 数据组件 -->
-
+                            <el-input-number v-model="count" @change="countChange" />
                             <!-- 按钮组件 -->
                             <div>
-                                <el-button size="large" class="btn">
+                                <el-button size="large" class="btn" @click="addCart">
                                     加入购物车
                                 </el-button>
                             </div>
@@ -123,9 +157,9 @@
                         <!-- 24热榜+专题推荐 -->
                         <div class="goods-aside">
                             <!-- 24小时热榜 -->
-                            <DetailHot :hot-type="1"/>
+                            <DetailHot :hot-type="1" />
                             <!-- 周热榜 -->
-                            <DetailHot :hot-type="2"/>
+                            <DetailHot :hot-type="2" />
                         </div>
                     </div>
                 </div>
