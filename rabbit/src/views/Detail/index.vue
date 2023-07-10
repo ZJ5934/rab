@@ -22,7 +22,7 @@
     const skuChange = (sku) => {
         // console.log(sku)
         skuObj = sku
-        console.log(skuObj)
+        // console.log(skuObj)
     }
 
     const count = ref(1)
