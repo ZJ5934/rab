@@ -25,13 +25,13 @@
                             <p class="count">x{{ i.count }}</p>
                         </div>
                     </RouterLink>
-                    <i class="iconfont icon-close-new" @click="store.delCart(i.skuId)"></i>
+                    <i class="iconfont icon-close-new" @click="cartStore.delCart(i.skuId)"></i>
                 </div>
 
             </div>
             <div class="foot">
                 <div class="total">
-                    <p>共 10 件商品</p>
+                    <p>共 {{cartStore.cartList.length}} 件商品</p>
                     <p>&yen; 100.00 </p>
                 </div>
                 <el-button size="large" type="primary">去购物车结算</el-button>
