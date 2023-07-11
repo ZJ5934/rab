@@ -8,6 +8,7 @@
   const getCategoryData = async () => {
     const res = await getCategoryFilterAPI(route.params.id)
     categoryData.value = res.result
+    console.log(categoryData.value)
   }
   onMounted(() => {
     getCategoryData()
@@ -24,7 +25,7 @@
   const getGoodList = async () => {
     const res = await getSubCategoryAPI(reqData.value)
     goodList.value = res.result.items
-    // console.log(goodList.value)2
+    console.log(goodList.value)
   }
   onMounted(() => {
     getGoodList()
@@ -67,7 +68,7 @@
       </el-tabs>
       <div class="body" v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
         <!-- 商品列表-->
-        <GoodsItme v-for="goods in goodList" :goods="goods" :key="goods.id" />
+        <GoodsItme v-for="goods in categoryData.goods" :goods="goods" :key="goods.id" />
       </div>
     </div>
   </div>
