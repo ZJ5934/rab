@@ -1,17 +1,28 @@
 import { defineStore } from "pinia";
 import { computed } from "vue";
+import { useUserStore } from './user.js'
+import { insertCartAPI, findNewCartListAPI } from '@/apis/cart.js'
 
 export const useCartStore = defineStore('cart', () => {
+    const userStore = useUserStore()
+    const isLogin = computed(() => userStore.userInfo.token)
     //state
     const cartList = ref([])
 
     //action
-    const addCart = (goods) => {
-        const item = cartList.value.find((item) => item.skuId === goods.skuId)
-        if (item) {
-            item.count += goods.count
+    const addCart = async (goods) => {
+        const { skuId, count } = goods
+        if (isLogin.value) {
+            await insertCartAPI({ skuId, count })
+            const res = await findNewCartListAPI()
+            cartList.value = res.result
         } else {
-            cartList.value.push(goods)
+            const item = cartList.value.find((item) => item.skuId === goods.skuId)
+            if (item) {
+                item.count += goods.count
+            } else {
+                cartList.value.push(goods)
+            }
         }
     }
 
