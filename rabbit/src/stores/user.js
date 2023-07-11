@@ -1,7 +1,8 @@
 //管理用户数据相关
 import { defineStore } from 'pinia'
 import { loginAPI } from '@/apis/user.js'
-import { useCartStore} from './cart.js'
+import { useCartStore } from './cart.js'
+import { mergeCartAPI} from '@/apis/cart.js'
 
 export const useUserStore = defineStore('user', () => {
     const cartStore = useCartStore()
@@ -11,6 +12,14 @@ export const useUserStore = defineStore('user', () => {
     const getUserInfo = async ({ account, password }) => {
         const res = await loginAPI({ account, password })
         userInfo.value = res.result
+        await mergeCartAPI(cartStore.cartList.map(item => { 
+            return {
+                skuId: item.skuId,
+                selected: item.selected,
+                count:item.count
+            }
+        }))
+        cartStore.updateNewList()
     }
     const clearUserInfo = () => { 
         userInfo.value = {}
