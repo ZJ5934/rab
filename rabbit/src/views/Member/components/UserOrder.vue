@@ -15,6 +15,7 @@
     onMounted(() => {
         getOrderList()
     })
+
     // tab列表
     const tabTypes = [
         { name: "all", label: "全部订单" },
@@ -25,13 +26,19 @@
         { name: "complete", label: "已完成" },
         { name: "cancel", label: "已取消" }
     ]
+
+    const tabChange = (state) => {
+        // console.log(index)
+        params.value.orderState = state
+        getOrderList()
+    }
     // 订单列表
 
 </script>
 
 <template>
     <div class="order-container">
-        <el-tabs>
+        <el-tabs @tab-change="tabChange">
             <!-- tab切换 -->
             <el-tab-pane v-for="item in tabTypes" :key="item.name" :label="item.label" />
 
